@@ -6,24 +6,19 @@ export function WhatsAppIcon() {
   );
 }
 
+import Image from "next/image";
+
 export function Brand() {
   return (
-    <a className="brand" href="#hero">
-      <span className="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path
-            d="M3 13c2.5-1.8 5-1.8 7.5 0s5 1.8 7.5 0M3 17c2.5-1.8 5-1.8 7.5 0s5 1.8 7.5 0M12 4l3.5 6h-7L12 4z"
-            stroke="#fff"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
-      <span className="brand-text">
-        <span className="en">TOHATSU</span>
-        <small>توهاتسو أرابيا</small>
-      </span>
+    <a className="brand" href="#hero" aria-label="توهاتسو أرابيا — الصفحة الرئيسية">
+      <Image
+        className="brand-logo"
+        src="/images/logo.webp"
+        alt="توهاتسو أرابيا"
+        width={500}
+        height={120}
+        priority
+      />
     </a>
   );
 }

@@ -117,16 +117,11 @@ a { color: inherit; text-decoration: none; }
   display: flex; align-items: center; justify-content: space-between;
   padding-block: 16px;
 }
-.brand { display: flex; align-items: center; gap: 14px; }
-.brand-mark {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: var(--red); position: relative; flex: none;
-  display: grid; place-items: center;
+.brand { display: inline-flex; align-items: center; }
+.brand-logo {
+  width: auto; height: clamp(30px, 3.4vw, 40px);
+  object-fit: contain; display: block;
 }
-.brand-mark svg { width: 20px; height: 20px; }
-.brand-text { display: grid; line-height: 1.2; }
-.brand-text .en { font-weight: 800; font-size: 17px; letter-spacing: 0.22em; }
-.brand-text small { font-size: 11px; color: var(--foam-60); font-weight: 400; letter-spacing: 0.04em; }
 .nav-links { display: flex; gap: 34px; font-size: 14px; font-weight: 400; color: var(--foam-60); }
 .nav-links a { transition: color 0.25s ease; }
 .nav-links a:hover { color: var(--foam); }
