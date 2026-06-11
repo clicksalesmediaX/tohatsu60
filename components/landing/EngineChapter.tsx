@@ -38,18 +38,17 @@ export function EngineChapter() {
         <div className="engine-center">
           <div className="engine-orbit" />
           <div className="slot">
-            {/* 360° spin scrubbed across the pinned chapter — alpha encodes, white keyed out */}
+            {/* 360° spin scrubbed across the pinned chapter. The white background is
+                baked onto the page's navy (--ink) so it blends in identically on every
+                device — universal H.264, no device-dependent transparent-video codecs */}
             <video
               className="engine-spin-video"
+              src="/images/video-navy.mp4"
               muted
               playsInline
               preload="auto"
               aria-label="محرك توهاتسو 60 حصان MFS60A — عرض دوران"
-            >
-              <source src="/images/video-alpha.mov" type='video/mp4; codecs="hvc1"' />
-              <source src="/images/video-alpha.webm" type="video/webm" />
-              <source src="/images/video.mp4" type="video/mp4" />
-            </video>
+            />
           </div>
         </div>
 
