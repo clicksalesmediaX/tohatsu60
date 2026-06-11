@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const CALLOUTS = [
   {
     cls: "co-1",
@@ -40,12 +38,18 @@ export function EngineChapter() {
         <div className="engine-center">
           <div className="engine-orbit" />
           <div className="slot">
-            <Image
-              src="/images/engine-detail.jpg"
-              alt="محرك توهاتسو 60 — منظر جانبي"
-              fill
-              sizes="(max-width: 640px) 58vw, 420px"
-            />
+            {/* 360° spin scrubbed across the pinned chapter — alpha encodes, white keyed out */}
+            <video
+              className="engine-spin-video"
+              muted
+              playsInline
+              preload="auto"
+              aria-label="محرك توهاتسو 60 حصان MFS60A — عرض دوران"
+            >
+              <source src="/images/video-alpha.mov" type='video/mp4; codecs="hvc1"' />
+              <source src="/images/video-alpha.webm" type="video/webm" />
+              <source src="/images/video.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 

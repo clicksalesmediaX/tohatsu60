@@ -45,7 +45,7 @@ function splitWords(el: HTMLElement) {
 function revealWords(el: HTMLElement, vars?: gsap.TweenVars) {
   splitWords(el);
   const targets = el.querySelectorAll(".w > span");
-  gsap.set(targets, { yPercent: 110 });
+  gsap.set(targets, { yPercent: 145 });
   return gsap.to(targets, {
     yPercent: 0,
     duration: 0.9,
@@ -151,24 +151,24 @@ export default function TohatsuLanding() {
         scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.4 },
       });
 
-      /* hero engine spin video: scrub playback with scroll */
-      const heroVideo = root.querySelector<HTMLVideoElement>(".hero-engine-video");
-      const buildVideoScrub = contextSafe(() => {
-        if (!heroVideo || !heroVideo.duration) return;
+      /* hero photo: periodic light sweep + inner depth parallax */
+      if (!prefersReduced) {
         gsap.fromTo(
-          heroVideo,
-          { currentTime: 0 },
-          {
-            currentTime: heroVideo.duration,
-            ease: "none",
-            scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.5 },
-          }
+          ".hero-shine",
+          { xPercent: 0 },
+          { xPercent: 480, duration: 1.8, ease: "power2.inOut", repeat: -1, repeatDelay: 2.6, delay: 1.6 }
         );
-      });
-      if (heroVideo) {
-        if (heroVideo.readyState >= 1) buildVideoScrub();
-        else heroVideo.addEventListener("loadedmetadata", buildVideoScrub, { once: true });
       }
+      gsap.fromTo(
+        ".hero-photo",
+        { scale: 1.1, yPercent: -3 },
+        {
+          scale: 1,
+          yPercent: 3,
+          ease: "none",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.4 },
+        }
+      );
 
       /* hero waves draw */
       $<SVGPathElement>(".hero-waves path").forEach((p, i) => {
@@ -206,6 +206,7 @@ export default function TohatsuLanding() {
       }
 
       /* ---------- engine chapter: pinned scrub ---------- */
+      let spinCleanup: (() => void) | null = null;
       const stage = root.querySelector(".engine-stage");
       if (stage) {
         const rpmValue = root.querySelector(".rpm-value");
@@ -279,6 +280,28 @@ export default function TohatsuLanding() {
 
         tl.fromTo(".rpm-dial", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 0.5);
         tl.to({}, { duration: 0.6 }); /* settle beat at the end */
+
+        /* 360° spin video scrubbed across the whole pinned chapter */
+        const spin = root.querySelector<HTMLVideoElement>(".engine-spin-video");
+        const addSpinScrub = contextSafe(() => {
+          if (!spin?.duration) return;
+          /* prime the decoder (Safari won't repaint paused seeks otherwise) */
+          spin
+            .play()
+            .then(() => spin.pause())
+            .catch(() => {});
+          tl.fromTo(
+            spin,
+            { currentTime: 0 },
+            { currentTime: spin.duration, duration: tl.duration(), ease: "none" },
+            0
+          );
+        });
+        if (spin) {
+          if (spin.readyState >= 1) addSpinScrub();
+          else spin.addEventListener("loadedmetadata", addSpinScrub, { once: true });
+        }
+        spinCleanup = () => spin?.removeEventListener("loadedmetadata", addSpinScrub);
       }
 
       /* ---------- generic section reveals ---------- */
@@ -304,7 +327,7 @@ export default function TohatsuLanding() {
       $("h2[data-words]").forEach((h) => {
         splitWords(h);
         const targets = h.querySelectorAll(".w > span");
-        gsap.set(targets, { yPercent: 110 });
+        gsap.set(targets, { yPercent: 145 });
         gsap.to(targets, {
           yPercent: 0,
           duration: 0.85,
@@ -339,12 +362,15 @@ export default function TohatsuLanding() {
         }
       );
 
-      /* fisher shots parallax */
-      $(".fisher-shot").forEach((el, i) => {
-        gsap.to(el, {
-          y: i % 2 ? -34 : 34,
-          ease: "none",
-          scrollTrigger: { trigger: ".fishers-grid", start: "top bottom", end: "bottom top", scrub: 0.6 },
+      /* fisher shots parallax — desktop only (avoids transform thrash on mobile) */
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        $(".fisher-shot").forEach((el, i) => {
+          gsap.to(el, {
+            y: i % 2 ? -34 : 34,
+            ease: "none",
+            scrollTrigger: { trigger: ".fishers-grid", start: "top bottom", end: "bottom top", scrub: 0.6 },
+          });
         });
       });
 
@@ -375,7 +401,7 @@ export default function TohatsuLanding() {
       root.addEventListener("click", onAnchorClick);
 
       return () => {
-        heroVideo?.removeEventListener("loadedmetadata", buildVideoScrub);
+        spinCleanup?.();
         root.removeEventListener("click", onAnchorClick);
         if (marqueeTick) gsap.ticker.remove(marqueeTick);
         if (lenisRaf) gsap.ticker.remove(lenisRaf);

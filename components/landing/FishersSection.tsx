@@ -17,9 +17,10 @@ export function FishersSection() {
             <div className="slot">
               <Image
                 src="/images/fisher-1.jpg"
-                alt="قارب صيد مع محرك توهاتسو"
+                alt="قارب بمحرك توهاتسو 60 حصان قبالة الساحل"
                 fill
-                sizes="(max-width: 1020px) 92vw, 500px"
+                loading="lazy"
+                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 500px"
               />
             </div>
           </div>
@@ -27,10 +28,10 @@ export function FishersSection() {
             <div className="slot">
               <Image
                 src="/images/fisher-2.jpg"
-                alt="طلعة فجر بحرية بمحرك توهاتسو"
+                alt="محرك توهاتسو 60 حصان في مياه فيروزية صافية"
                 fill
-                sizes="(max-width: 1020px) 92vw, 400px"
-                style={{ objectPosition: "70% 50%" }}
+                loading="lazy"
+                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 400px"
               />
             </div>
           </div>
@@ -38,9 +39,10 @@ export function FishersSection() {
             <div className="slot">
               <Image
                 src="/images/fisher-3.jpg"
-                alt="محرك توهاتسو 60 عن قرب"
+                alt="محرك توهاتسو 60 حصان عن قرب"
                 fill
-                sizes="(max-width: 1020px) 92vw, 300px"
+                loading="lazy"
+                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 92vw, 300px"
               />
             </div>
           </div>

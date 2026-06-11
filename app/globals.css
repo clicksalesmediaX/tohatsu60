@@ -53,9 +53,22 @@ a { color: inherit; text-decoration: none; }
 .slot { position: absolute; inset: 0; overflow: clip; }
 .slot img, .slot video { width: 100%; height: 100%; object-fit: cover; }
 
-/* hero engine spin video: white-bg clip shown in full, bars blend into the card */
-.hero-engine-frame .slot { background: #fff; }
-.hero-engine-frame .slot video { object-fit: contain; }
+/* engine chapter spin video: alpha clip floats free over the dark stage */
+.engine-center .slot video { object-fit: contain; }
+
+/* hero photo: gradient overlay + periodic light sweep */
+.hero-img-overlay {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(200deg, rgba(6, 19, 29, 0) 45%, rgba(6, 19, 29, 0.55) 100%),
+    radial-gradient(85% 60% at 70% 12%, rgba(47, 182, 201, 0.16), transparent 60%);
+}
+.hero-shine {
+  position: absolute; top: -25%; bottom: -25%; left: -45%; width: 36%;
+  z-index: 3; pointer-events: none; transform: skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2) 50%, transparent);
+  will-change: transform;
+}
 
 /* ---------- shared layout ---------- */
 .wrap { width: min(1240px, 92vw); margin-inline: auto; }
@@ -73,13 +86,19 @@ a { color: inherit; text-decoration: none; }
 .section-head { display: grid; gap: 18px; max-width: 720px; }
 .section-head h2 {
   font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(30px, 4.6vw, 56px); line-height: 1.25;
+  font-size: clamp(30px, 4.6vw, 56px); line-height: 1.38;
   letter-spacing: -0.01em; text-wrap: balance;
 }
 .section-head p { font-size: clamp(15px, 1.4vw, 18px); line-height: 1.9; color: var(--foam-60); max-width: 56ch; }
 
-/* word-reveal targets */
-.reveal-words .w { display: inline-block; overflow: clip; vertical-align: bottom; }
+/* word-reveal targets — generously padded masks so Arabic marks (hamزة, dots,
+   ascenders) and descenders never get clipped; negative margins cancel the
+   padding so layout/spacing is unchanged */
+.reveal-words .w {
+  display: inline-block; overflow: clip; vertical-align: bottom;
+  padding: 0.45em 0.14em 0.34em;
+  margin: -0.45em -0.14em -0.34em;
+}
 .reveal-words .w > span { display: inline-block; }
 
 /* ---------- nav ---------- */
@@ -163,7 +182,7 @@ a { color: inherit; text-decoration: none; }
 .hero-copy { display: grid; gap: 26px; }
 .hero h1 {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(40px, 6.2vw, 84px); line-height: 1.18;
+  font-size: clamp(40px, 6.2vw, 84px); line-height: 1.32;
   letter-spacing: -0.015em; text-wrap: balance;
 }
 .hero h1 .accent { color: var(--aqua); }
@@ -211,7 +230,10 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: -7%; border-radius: 50%;
   border: 1px dashed var(--aqua-dim);
 }
-.hero-engine-frame .slot { border-radius: 24px; }
+.hero-engine-frame .slot {
+  border-radius: 24px;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45), inset 0 0 0 1px var(--hairline);
+}
 .hero-float { will-change: transform; }
 .hero-tag {
   position: absolute; inset-inline-end: -12px; top: 8%;
@@ -540,7 +562,16 @@ body.no-grain .grain { display: none; }
   .rpm-dial { bottom: 2.5%; }
   .engine-center { width: min(250px, 58vw); }
   .hero-stats { flex-wrap: wrap; gap: 18px 28px; }
-  .fs-1, .fs-2 { grid-column: span 12; aspect-ratio: 16 / 10; margin-top: 0; }
+
+  /* fishers: clean full-width stack, ratios matched to each shot's orientation */
+  .fishers-grid { gap: 14px; }
+  .fs-1 { grid-column: span 12; aspect-ratio: 16 / 10; margin-top: 0; }
+  .fs-2 { grid-column: span 12; aspect-ratio: 16 / 10; margin-top: 0; }
+  .fs-3 { grid-column: span 12; aspect-ratio: 4 / 5; }
+  .fishers-quote blockquote { max-width: 18ch; }
+
+  /* drop the animated grain on small screens — saves a full-screen repaint loop */
+  .grain { animation: none; opacity: 0.04; }
 }
 
 /* ---------- reduced motion ---------- */

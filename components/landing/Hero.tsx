@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { waLink } from "@/lib/site";
 import { WhatsAppIcon } from "./icons";
 
@@ -65,15 +66,17 @@ export function Hero() {
           <div className="hero-engine-frame hero-float">
             <div className="ring" />
             <div className="slot">
-              {/* scroll-scrubbed 360° spin — playback driven by ScrollTrigger */}
-              <video
-                className="hero-engine-video"
-                src="/images/video.mp4"
-                muted
-                playsInline
-                preload="auto"
-                aria-label="محرك توهاتسو 60 حصان MFS60A — عرض دوران"
+              <Image
+                className="hero-photo"
+                src="/images/hero.webp"
+                alt="صياد سعودي على قارب بمحرك توهاتسو 60 وقت الفجر"
+                fill
+                priority
+                fetchPriority="high"
+                sizes="(max-width: 1020px) 70vw, 440px"
               />
+              <div className="hero-img-overlay" />
+              <div className="hero-shine" />
             </div>
             <div className="hero-tag">
               <b className="en">EFI</b>

@@ -15,6 +15,7 @@ const plexArabic = IBM_Plex_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://tohatsuarabia.com"),
   title: "توهاتسو 60 — قوة يابانية لأهل البحر | توهاتسو أرابيا",
   description:
     "محرك توهاتسو 60 حصان — موثوقية يابانية منذ 1922، الأخف وزنًا في فئته، وحقن إلكتروني EFI. صُنع ليكون رفيق الصيادين في مياه المملكة. اطلب عرض سعر من توهاتسو أرابيا.",
