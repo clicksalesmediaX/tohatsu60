@@ -262,10 +262,14 @@ a { color: inherit; text-decoration: none; }
 .hero-waves path { fill: none; stroke-width: 1.2; }
 
 /* ---------- marquee ---------- */
+/* force LTR flow so the max-content track anchors to the LEFT and overflows
+   right; in the page's RTL context it would otherwise anchor right and leave
+   an empty gap on the right as it scrolls (decorative row, so LTR is fine) */
 .marquee {
   border-block: 1px solid var(--hairline);
   background: var(--deep);
   overflow: clip; padding-block: 20px;
+  direction: ltr;
 }
 .marquee-track { display: flex; gap: 0; width: max-content; will-change: transform; direction: ltr; }
 .marquee-chunk { display: flex; align-items: center; gap: 56px; padding-inline-end: 56px; white-space: nowrap; }

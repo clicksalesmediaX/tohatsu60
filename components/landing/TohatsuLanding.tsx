@@ -180,29 +180,50 @@ export default function TohatsuLanding() {
         }
       });
 
-      /* ---------- marquee (velocity reactive) ---------- */
-      const track = root.querySelector(".marquee-track");
+      /* ---------- marquee (seamless infinite loop, velocity reactive) ---------- */
+      const marqueeEl = root.querySelector<HTMLElement>(".marquee");
+      const track = root.querySelector<HTMLElement>(".marquee-track");
       let marqueeTick: ((time: number, delta: number) => void) | null = null;
-      if (track) {
-        let xp = 0;
-        const speed = prefersReduced ? 0 : 0.035;
+      let marqueeDisposed = false;
+      const setupMarquee = contextSafe(() => {
+        if (marqueeDisposed || !marqueeEl || !track) return;
+        const base = track.querySelector<HTMLElement>(".marquee-chunk");
+        if (!base) return;
+        /* collapse back to one chunk, then clone enough copies so the row
+           always spans at least 2× the viewport — guarantees no empty gap
+           after a chunk scrolls off, at any screen width */
+        while (track.children.length > 1) track.removeChild(track.lastChild as ChildNode);
+        const chunkW = base.offsetWidth;
+        if (!chunkW) return;
+        const copies = Math.max(2, Math.ceil((marqueeEl.clientWidth * 2) / chunkW) + 1);
+        for (let i = 1; i < copies; i += 1) track.appendChild(base.cloneNode(true));
+
+        let x = 0;
+        const speed = prefersReduced ? 0 : 55; /* px per second */
         let velo = 0;
         ScrollTrigger.create({
           trigger: document.body,
           start: 0,
           end: "max",
           onUpdate: (self) => {
-            velo = self.getVelocity() / 4000;
+            velo = self.getVelocity() / 130;
           },
         });
-        marqueeTick = (_, delta) => {
-          const boost = gsap.utils.clamp(-0.25, 0.25, velo);
-          velo *= 0.92;
-          xp -= (speed + Math.abs(boost) * 0.9) * (delta / 16.7);
-          if (xp <= -50) xp += 50;
-          gsap.set(track, { xPercent: xp });
+        marqueeTick = (_t, delta) => {
+          const boost = gsap.utils.clamp(-700, 700, velo);
+          velo *= 0.9;
+          x -= (speed + Math.abs(boost)) * (delta / 1000);
+          /* wrap by exactly one chunk width → the next copy lands seamlessly */
+          if (x <= -chunkW) x = x % chunkW;
+          gsap.set(track, { x });
         };
         gsap.ticker.add(marqueeTick);
+      });
+      /* measure after fonts load so the Arabic chunk width is correct */
+      if (typeof document !== "undefined" && document.fonts && document.fonts.status !== "loaded") {
+        document.fonts.ready.then(setupMarquee);
+      } else {
+        setupMarquee();
       }
 
       /* ---------- engine chapter: pinned scrub ---------- */
@@ -401,6 +422,7 @@ export default function TohatsuLanding() {
       root.addEventListener("click", onAnchorClick);
 
       return () => {
+        marqueeDisposed = true;
         spinCleanup?.();
         root.removeEventListener("click", onAnchorClick);
         if (marqueeTick) gsap.ticker.remove(marqueeTick);
