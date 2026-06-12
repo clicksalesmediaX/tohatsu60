@@ -83,10 +83,15 @@ export default function TohatsuLanding() {
       const $ = <T extends Element = HTMLElement>(sel: string) =>
         Array.from(root.querySelectorAll<T>(sel));
 
-      /* ---------- smooth scroll (Lenis) ---------- */
+      /* mobile: ignore URL-bar show/hide resizes so pins don't jump */
+      ScrollTrigger.config({ ignoreMobileResize: true });
+
+      /* ---------- smooth scroll (Lenis) — pointer devices only; native
+         touch scrolling is smoother and cheaper on phones ---------- */
+      const finePointer = window.matchMedia("(pointer: fine)").matches;
       let lenis: Lenis | null = null;
       let lenisRaf: ((time: number) => void) | null = null;
-      if (!prefersReduced) {
+      if (!prefersReduced && finePointer) {
         lenis = new Lenis({ duration: 1.15, smoothWheel: true });
         lenis.on("scroll", ScrollTrigger.update);
         lenisRaf = (time) => lenis?.raf(time * 1000);
@@ -305,7 +310,11 @@ export default function TohatsuLanding() {
            frames drawn to canvas (true transparency on every device) */
         const spinCanvas = root.querySelector<HTMLCanvasElement>(".engine-spin-canvas");
         if (spinCanvas) {
-          const SPIN_FRAMES = 49;
+          const SPIN_FRAMES = 46;
+          /* lighter frame set on small screens */
+          const spinDir = window.matchMedia("(max-width: 640px)").matches
+            ? "/images/spin/sm"
+            : "/images/spin";
           const ctx = spinCanvas.getContext("2d");
           const frames: HTMLImageElement[] = [];
           let drawn = -1;
@@ -320,11 +329,20 @@ export default function TohatsuLanding() {
             ctx.drawImage(img, 0, 0);
             drawn = i;
           };
-          for (let i = 0; i < SPIN_FRAMES; i += 1) {
-            const img = new Image();
-            img.src = `/images/spin/frame-${String(i).padStart(3, "0")}.webp`;
-            if (i === 0) img.onload = () => draw(0);
-            frames.push(img);
+          /* defer the ~1MB sequence until the browser is idle so it never
+             competes with hero paint / first scroll */
+          const loadFrames = () => {
+            for (let i = 0; i < SPIN_FRAMES; i += 1) {
+              const img = new Image();
+              img.src = `${spinDir}/frame-${String(i).padStart(3, "0")}.webp`;
+              if (i === 0) img.onload = () => draw(0);
+              frames.push(img);
+            }
+          };
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(loadFrames, { timeout: 1200 });
+          } else {
+            setTimeout(loadFrames, 350);
           }
           const spinState = { f: 0 };
           tl.to(

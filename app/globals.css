@@ -569,8 +569,10 @@ body.no-grain .grain { display: none; }
   .fs-3 { grid-column: span 12; aspect-ratio: 4 / 5; }
   .fishers-quote blockquote { max-width: 18ch; }
 
-  /* drop the animated grain on small screens — saves a full-screen repaint loop */
-  .grain { animation: none; opacity: 0.04; }
+  /* drop the grain layer entirely on small screens — one less full-screen
+     composite; and swap the nav's expensive backdrop blur for a solid fill */
+  .grain { display: none; }
+  .nav.scrolled { backdrop-filter: none; background: rgba(6, 19, 29, 0.94); }
 }
 
 /* ---------- reduced motion ---------- */
