@@ -53,8 +53,8 @@ a { color: inherit; text-decoration: none; }
 .slot { position: absolute; inset: 0; overflow: clip; }
 .slot img, .slot video { width: 100%; height: 100%; object-fit: cover; }
 
-/* engine chapter spin video: alpha clip floats free over the dark stage */
-.engine-center .slot video { object-fit: contain; }
+/* engine chapter spin canvas: alpha frames float free over the dark stage */
+.engine-center .slot canvas { width: 100%; height: 100%; object-fit: contain; }
 
 /* hero photo: gradient overlay + periodic light sweep */
 .hero-img-overlay {

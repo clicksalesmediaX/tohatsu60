@@ -227,7 +227,6 @@ export default function TohatsuLanding() {
       }
 
       /* ---------- engine chapter: pinned scrub ---------- */
-      let spinCleanup: (() => void) | null = null;
       const stage = root.querySelector(".engine-stage");
       if (stage) {
         const rpmValue = root.querySelector(".rpm-value");
@@ -302,27 +301,46 @@ export default function TohatsuLanding() {
         tl.fromTo(".rpm-dial", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 0.5);
         tl.to({}, { duration: 0.6 }); /* settle beat at the end */
 
-        /* 360° spin video scrubbed across the whole pinned chapter */
-        const spin = root.querySelector<HTMLVideoElement>(".engine-spin-video");
-        const addSpinScrub = contextSafe(() => {
-          if (!spin?.duration) return;
-          /* prime the decoder (Safari won't repaint paused seeks otherwise) */
-          spin
-            .play()
-            .then(() => spin.pause())
-            .catch(() => {});
-          tl.fromTo(
-            spin,
-            { currentTime: 0 },
-            { currentTime: spin.duration, duration: tl.duration(), ease: "none" },
+        /* 360° spin scrubbed across the whole pinned chapter — alpha WebP
+           frames drawn to canvas (true transparency on every device) */
+        const spinCanvas = root.querySelector<HTMLCanvasElement>(".engine-spin-canvas");
+        if (spinCanvas) {
+          const SPIN_FRAMES = 49;
+          const ctx = spinCanvas.getContext("2d");
+          const frames: HTMLImageElement[] = [];
+          let drawn = -1;
+          const draw = (i: number) => {
+            const img = frames[i];
+            if (!ctx || !img?.complete || !img.naturalWidth) return;
+            if (spinCanvas.width !== img.naturalWidth) {
+              spinCanvas.width = img.naturalWidth;
+              spinCanvas.height = img.naturalHeight;
+            }
+            ctx.clearRect(0, 0, spinCanvas.width, spinCanvas.height);
+            ctx.drawImage(img, 0, 0);
+            drawn = i;
+          };
+          for (let i = 0; i < SPIN_FRAMES; i += 1) {
+            const img = new Image();
+            img.src = `/images/spin/frame-${String(i).padStart(3, "0")}.webp`;
+            if (i === 0) img.onload = () => draw(0);
+            frames.push(img);
+          }
+          const spinState = { f: 0 };
+          tl.to(
+            spinState,
+            {
+              f: SPIN_FRAMES - 1,
+              duration: tl.duration(),
+              ease: "none",
+              onUpdate: () => {
+                const i = Math.round(spinState.f);
+                if (i !== drawn) draw(i);
+              },
+            },
             0
           );
-        });
-        if (spin) {
-          if (spin.readyState >= 1) addSpinScrub();
-          else spin.addEventListener("loadedmetadata", addSpinScrub, { once: true });
         }
-        spinCleanup = () => spin?.removeEventListener("loadedmetadata", addSpinScrub);
       }
 
       /* ---------- generic section reveals ---------- */
@@ -423,7 +441,6 @@ export default function TohatsuLanding() {
 
       return () => {
         marqueeDisposed = true;
-        spinCleanup?.();
         root.removeEventListener("click", onAnchorClick);
         if (marqueeTick) gsap.ticker.remove(marqueeTick);
         if (lenisRaf) gsap.ticker.remove(lenisRaf);

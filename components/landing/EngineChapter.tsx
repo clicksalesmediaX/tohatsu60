@@ -38,15 +38,12 @@ export function EngineChapter() {
         <div className="engine-center">
           <div className="engine-orbit" />
           <div className="slot">
-            {/* 360° spin scrubbed across the pinned chapter. The white background is
-                baked onto the page's navy (--ink) so it blends in identically on every
-                device — universal H.264, no device-dependent transparent-video codecs */}
-            <video
-              className="engine-spin-video"
-              src="/images/video-navy.mp4"
-              muted
-              playsInline
-              preload="auto"
+            {/* 360° spin scrubbed across the pinned chapter — alpha WebP frame
+                sequence drawn to canvas. True transparency on every device;
+                no transparent-video codec support needed */}
+            <canvas
+              className="engine-spin-canvas"
+              role="img"
               aria-label="محرك توهاتسو 60 حصان MFS60A — عرض دوران"
             />
           </div>
