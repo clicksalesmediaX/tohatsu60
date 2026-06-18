@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { WaButton } from "./WaButton";
 
 export function FishersSection() {
   return (
@@ -52,6 +53,11 @@ export function FishersSection() {
             المحرك اللي يطلع معك الفجر، <span className="accent">ويرجّعك قبل المغرب.</span>
           </blockquote>
           <cite>توهاتسو 60 — لكل صياد على سواحل المملكة</cite>
+        </div>
+        <div className="section-cta" data-reveal>
+          <WaButton message="السلام عليكم، أنا من أهل البحر وحاب محرك توهاتسو 60 لقاربي — ودّي بالتفاصيل.">
+            كلّمنا على واتساب
+          </WaButton>
         </div>
       </div>
     </section>

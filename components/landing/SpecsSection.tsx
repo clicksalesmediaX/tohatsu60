@@ -1,3 +1,5 @@
+import { WaButton } from "./WaButton";
+
 const SPECS: Array<{ dt: string; dd: React.ReactNode }> = [
   { dt: "الموديل", dd: <span className="en-val">MFS60A</span> },
   { dt: "القوة القصوى", dd: <>60 حصان <span className="en-val">(44.1 kW)</span></> },
@@ -31,6 +33,11 @@ export function SpecsSection() {
             </div>
           ))}
         </dl>
+        <div className="section-cta" data-reveal>
+          <WaButton message="السلام عليكم، حاب أعرف سعر وتوفّر محرك توهاتسو 60 (MFS60A).">
+            اطلب السعر والتوفّر عبر واتساب
+          </WaButton>
+        </div>
       </div>
     </section>
   );

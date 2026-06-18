@@ -1,8 +1,8 @@
 /* Site-wide config for the Tohatsu 60 landing page. */
 
 export const SITE = {
-  // TODO: replace with the real Tohatsu Arabia WhatsApp number (digits only, intl format)
-  whatsappNumber: "966500000000",
+  // Tohatsu Arabia WhatsApp number — digits only, international format (no leading 0).
+  whatsappNumber: "966543699901",
   defaultWaMessage: "السلام عليكم، أرغب بالاستفسار عن محرك توهاتسو 60 حصان.",
 };
 

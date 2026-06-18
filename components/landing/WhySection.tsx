@@ -1,3 +1,5 @@
+import { WaButton } from "./WaButton";
+
 const CARDS = [
   {
     span: "span-7",
@@ -57,6 +59,11 @@ export function WhySection() {
             أكثر من مئة عام من الهندسة البحرية. ملايين المحركات في مياه العالم،
             من بحر اليابان إلى البحر الأحمر والخليج العربي.
           </p>
+        </div>
+        <div className="section-cta" data-reveal>
+          <WaButton message="السلام عليكم، حاب أعرف أكثر عن مميزات محرك توهاتسو 60 حصان.">
+            تواصل معنا على واتساب
+          </WaButton>
         </div>
       </div>
     </section>

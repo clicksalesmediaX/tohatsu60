@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { WaButton } from "./WaButton";
 
 export function VideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -58,6 +59,11 @@ export function VideoSection() {
           <span className={`video-note${showNote ? " show" : ""}`}>
             أضف ملف الفيديو إلى المشروع باسم assets/engine-video.mp4
           </span>
+        </div>
+        <div className="section-cta" data-reveal>
+          <WaButton message="السلام عليكم، شفت فيديو توهاتسو 60 وحاب أطلب عرض سعر وتفاصيل.">
+            اطلب عرض سعر عبر واتساب
+          </WaButton>
         </div>
       </div>
     </section>
