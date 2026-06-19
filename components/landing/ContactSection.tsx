@@ -22,7 +22,7 @@ export function ContactSection() {
               </span>
               <span>
                 <b>تفضّل الواتساب؟</b>
-                <span>كلّمنا مباشرة — نرد عليك بسرعة</span>
+                <span>كلّمنا مباشرة نرد عليك بسرعة</span>
               </span>
             </a>
           </div>

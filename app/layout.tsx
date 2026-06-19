@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Alexandria, IBM_Plex_Sans_Arabic } from "next/font/google";
 import "./globals.css";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 
 const alexandria = Alexandria({
   variable: "--font-alexandria",
@@ -44,7 +45,10 @@ export default function RootLayout({
       dir="rtl"
       className={`${alexandria.variable} ${plexArabic.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <MetaPixel />
+        {children}
+      </body>
     </html>
   );
 }
