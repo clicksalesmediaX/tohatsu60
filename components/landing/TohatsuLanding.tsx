@@ -1,488 +1,546 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import Lenis from "lenis";
 
-import { Nav, DepthMeter, WhatsAppFab } from "./Nav";
-import { Hero, Marquee } from "./Hero";
-import { EngineChapter } from "./EngineChapter";
-import { WhySection } from "./WhySection";
-import { VideoSection } from "./VideoSection";
-import { FishersSection } from "./FishersSection";
-import { SpecsSection } from "./SpecsSection";
-import { ContactSection, Footer } from "./ContactSection";
+import { waLink } from "@/lib/site";
+import { Brand, WhatsAppIcon } from "./icons";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-/* ---------- word-split helpers (mutate static headings once) ---------- */
-function splitWords(el: HTMLElement) {
-  if (el.dataset.split) return;
-  el.dataset.split = "1";
-  el.classList.add("reveal-words");
-  const nodes = Array.from(el.childNodes);
-  let html = "";
-  const wrap = (text: string) =>
-    text
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((w) => `<span class="w"><span>${w}</span></span>`)
-      .join(" ");
-  nodes.forEach((n) => {
-    if (n.nodeType === Node.TEXT_NODE) {
-      html += wrap(n.textContent ?? "") + " ";
-    } else if (n.nodeType === Node.ELEMENT_NODE) {
-      const elNode = n as HTMLElement;
-      const cls = elNode.className ? ` class="${elNode.className}"` : "";
-      html += `<span${cls}>${wrap(elNode.textContent ?? "")}</span> `;
-    }
-  });
-  el.innerHTML = html;
-}
+const FEATURES = [
+  {
+    number: "01",
+    label: "178.5 كجم",
+    title: "أخفّ 150 حصان في فئته",
+    text: "وزن أقل على المؤخرة يعني استجابة أسرع، توازنًا أفضل، واستهلاكًا أذكى — خصوصًا مع قوارب RIB والقوارب الخفيفة.",
+  },
+  {
+    number: "02",
+    label: "4–2–1",
+    title: "عزم ينهض بالقارب أسرع",
+    text: "مجمع العادم المضبوط يوحّد مسارات العادم ليولّد عزمًا قويًا من السرعات المنخفضة وانطلاقة واثقة حتى مع الضيوف والمعدات.",
+  },
+  {
+    number: "03",
+    label: "2,000 RPM",
+    title: "كفاءة تحمي هامش الرحلة",
+    text: "حساس الطرق وبرمجة ECU يضبطان الاحتراق لحظة بلحظة. وفي اختبارات توهاتسو المقارنة، حقق MFS150A أفضل كفاءة عند 2,000 دورة/دقيقة.",
+  },
+  {
+    number: "04",
+    label: "650–850 RPM",
+    title: "هدوء يليق بتجربة ضيوفك",
+    text: "منفذ خمول كبير ومسار سحب متساوي الطول يخفّضان الضوضاء، مع خمس سرعات خمول تساعدك على المناورة بهدوء قرب المرسى.",
+  },
+  {
+    number: "05",
+    label: "41A",
+    title: "طاقة لأجهزة الرحلة",
+    text: "مولّد عالي الخرج بقدرة 492 واط لتغذية الملاحة، الاتصالات، الإضاءة، والشاشات طوال يوم التشغيل.",
+  },
+];
 
-function revealWords(el: HTMLElement, vars?: gsap.TweenVars) {
-  splitWords(el);
-  const targets = el.querySelectorAll(".w > span");
-  gsap.set(targets, { yPercent: 145 });
-  return gsap.to(targets, {
-    yPercent: 0,
-    duration: 0.9,
-    stagger: 0.055,
-    ease: "power3.out",
-    ...vars,
-  });
-}
+const USE_CASES = [
+  {
+    number: "01",
+    title: "مشغّلو الرحلات البحرية",
+    text: "انطلاقة أسرع من المرسى، هدوء أفضل للضيوف، وقوة كافية لبرنامج رحلات يومي بثقة.",
+    metric: "رحلات أكثر سلاسة",
+  },
+  {
+    number: "02",
+    title: "تأجير القوارب وRIB",
+    text: "وزن محسّن وتحكم مباشر يساعدان العملاء على المناورة بسهولة ويقللان العبء على القارب.",
+    metric: "تشغيل أسهل",
+  },
+  {
+    number: "03",
+    title: "النزهات العائلية الطويلة",
+    text: "قوة احتياطية عند الحاجة، اقتصاد في الإبحار، وهدوء يحافظ على راحة الحديث طوال الرحلة.",
+    metric: "مدى وراحة أكبر",
+  },
+];
 
-function counter(
-  el: Element,
-  target: number,
-  opts: { from?: number; duration?: number; ease?: string; decimals?: number } = {}
-) {
-  const obj = { v: opts.from ?? 0 };
-  const decimals = opts.decimals ?? 0;
-  return gsap.to(obj, {
-    v: target,
-    duration: opts.duration ?? 1.6,
-    ease: opts.ease ?? "power2.out",
-    onUpdate: () => {
-      el.textContent = obj.v.toFixed(decimals);
-    },
-  });
+const SPECS = [
+  ["الموديل", "MFS150A"],
+  ["القوة القصوى", "150 حصان / 110.3 كيلوواط"],
+  ["المحرك", "4 أسطوانات — SOHC بأربعة صمامات لكل أسطوانة"],
+  ["السعة", "1,995 سم³"],
+  ["القطر × الشوط", "84 × 90 مم"],
+  ["نطاق التشغيل", "5,500 – 6,200 دورة/دقيقة"],
+  ["الوزن الأدنى", "178.5 كجم"],
+  ["نظام الوقود", "حقن إلكتروني EFI"],
+  ["نسبة التخفيض", "2.08 : 1"],
+  ["المولّد", "12V / 492W / 41A"],
+  ["طول العمود", "20 أو 25 بوصة"],
+  ["الرفع والإمالة", "هيدروليكي Power Trim & Tilt"],
+];
+
+function WhatsAppLink({
+  children,
+  message,
+  className = "",
+}: {
+  children: React.ReactNode;
+  message: string;
+  className?: string;
+}) {
+  return (
+    <a
+      className={`cta cta-whatsapp ${className}`.trim()}
+      href={waLink(message)}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <WhatsAppIcon />
+      <span>{children}</span>
+      <span className="cta-arrow" aria-hidden="true">↗</span>
+    </a>
+  );
 }
 
 export default function TohatsuLanding() {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
-    (_context, contextSafe) => {
+    () => {
       const root = rootRef.current;
-      if (!root || !contextSafe) return;
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const $ = <T extends Element = HTMLElement>(sel: string) =>
-        Array.from(root.querySelectorAll<T>(sel));
+      if (!root) return;
 
-      /* mobile: ignore URL-bar show/hide resizes so pins don't jump */
-      ScrollTrigger.config({ ignoreMobileResize: true });
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const nav = root.querySelector(".site-nav");
+      const progress = root.querySelector<HTMLElement>(".scroll-progress span");
 
-      /* ---------- smooth scroll (Lenis) — pointer devices only; native
-         touch scrolling is smoother and cheaper on phones ---------- */
-      const finePointer = window.matchMedia("(pointer: fine)").matches;
-      let lenis: Lenis | null = null;
-      let lenisRaf: ((time: number) => void) | null = null;
-      if (!prefersReduced && finePointer) {
-        lenis = new Lenis({ duration: 1.15, smoothWheel: true });
-        lenis.on("scroll", ScrollTrigger.update);
-        lenisRaf = (time) => lenis?.raf(time * 1000);
-        gsap.ticker.add(lenisRaf);
-        gsap.ticker.lagSmoothing(0);
-      }
-
-      /* ---------- nav state + depth meter ---------- */
-      const nav = root.querySelector(".nav");
       ScrollTrigger.create({
-        start: 10,
+        start: 12,
         end: "max",
-        onToggle: (self) => nav?.classList.toggle("scrolled", self.isActive),
-      });
-      gsap.to(".depth-fill", {
-        height: "100%",
-        ease: "none",
-        scrollTrigger: { trigger: document.body, start: "top top", end: "max", scrub: 0.4 },
+        onUpdate: (self) => {
+          nav?.classList.toggle("is-scrolled", self.scroll() > 24);
+          if (progress) progress.style.transform = `scaleX(${self.progress})`;
+        },
       });
 
-      /* ---------- hero intro ---------- */
-      if (!prefersReduced) {
-        const heroTl = gsap.timeline({ delay: 0.15 });
-        const heroH1 = root.querySelector<HTMLElement>(".hero h1");
-        heroTl
-          .from(".nav", { yPercent: -120, duration: 0.8, ease: "power3.out" }, 0)
-          .from(".hero .kicker", { opacity: 0, x: 30, duration: 0.8, ease: "power3.out" }, 0.2)
-          .from(".hero-sub", { opacity: 0, y: 24, duration: 0.9, ease: "power3.out" }, 0.7)
-          .from(".hero-ctas .btn", { opacity: 0, y: 24, stagger: 0.1, duration: 0.7, ease: "power3.out" }, 0.85)
-          .from(".hero-stats", { opacity: 0, y: 20, duration: 0.8 }, 1.05)
-          .from(".hero-visual", { opacity: 0, scale: 0.92, duration: 1.2, ease: "power3.out" }, 0.4)
-          .from(".hero-ghost", { opacity: 0, xPercent: -8, duration: 1.6, ease: "power2.out" }, 0.3);
-        if (heroH1) heroTl.add(revealWords(heroH1), 0.1);
-
-        $(".hero-stats .hstat b span[data-count]").forEach((el, i) => {
-          const t = parseFloat(el.getAttribute("data-count") ?? "0");
-          const d = parseInt(el.getAttribute("data-decimals") ?? "0", 10);
-          heroTl.add(counter(el, t, { decimals: d, duration: 1.8 }), 1.1 + i * 0.08);
+      if (reduced) {
+        root.querySelectorAll<HTMLElement>("[data-count]").forEach((element) => {
+          element.textContent = element.dataset.count ?? "";
         });
-
-        /* levitation */
-        gsap.to(".hero-float", { y: -16, duration: 2.6, yoyo: true, repeat: -1, ease: "sine.inOut" });
-        gsap.to(".hero-engine-frame .ring", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
-      } else {
-        /* reduced motion: show final numbers immediately */
-        $("[data-count]").forEach((el) => {
-          const t = parseFloat(el.getAttribute("data-count") ?? "0");
-          const d = parseInt(el.getAttribute("data-decimals") ?? "0", 10);
-          el.textContent = t.toFixed(d);
-        });
+        return;
       }
 
-      /* hero parallax on scroll */
-      gsap.to(".hero-ghost", {
-        yPercent: 24,
-        ease: "none",
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.4 },
-      });
-      gsap.to(".hero-visual", {
-        yPercent: 12,
-        ease: "none",
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.4 },
+      const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+      intro
+        .from(".site-nav", { yPercent: -120, duration: 0.75 })
+        .from(".hero-kicker", { opacity: 0, y: 24, duration: 0.7 }, 0.18)
+        .from(".hero-title > span", { opacity: 0, yPercent: 90, duration: 0.9, stagger: 0.08 }, 0.25)
+        .from(".hero-lead", { opacity: 0, y: 30, duration: 0.8 }, 0.58)
+        .from(".hero-actions > *", { opacity: 0, y: 24, duration: 0.65, stagger: 0.1 }, 0.72)
+        .from(".hero-metrics .metric", { opacity: 0, y: 20, duration: 0.6, stagger: 0.08 }, 0.84)
+        .from(".hero-model", { opacity: 0, x: -30, duration: 0.8 }, 0.9);
+
+      root.querySelectorAll<HTMLElement>(".hero-metrics [data-count]").forEach((element, index) => {
+        const target = Number(element.dataset.count ?? 0);
+        const decimals = Number(element.dataset.decimals ?? 0);
+        const value = { current: 0 };
+        gsap.to(value, {
+          current: target,
+          duration: 1.5,
+          delay: 1 + index * 0.08,
+          ease: "power2.out",
+          onUpdate: () => {
+            element.textContent = value.current.toFixed(decimals);
+          },
+        });
       });
 
-      /* hero photo: periodic light sweep + inner depth parallax */
-      if (!prefersReduced) {
-        gsap.fromTo(
-          ".hero-shine",
-          { xPercent: 0 },
-          { xPercent: 480, duration: 1.8, ease: "power2.inOut", repeat: -1, repeatDelay: 2.6, delay: 1.6 }
-        );
-      }
+      gsap.to(".hero-scene", {
+        scale: 1.1,
+        yPercent: 7,
+        ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.6 },
+      });
+
+      gsap.to(".hero-light", {
+        xPercent: 320,
+        duration: 2.2,
+        repeat: -1,
+        repeatDelay: 3.4,
+        ease: "power2.inOut",
+      });
+
+      gsap.to(".product-engine", {
+        y: -16,
+        rotate: -1.8,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      gsap.to(".product-orbit", {
+        rotate: 360,
+        duration: 34,
+        repeat: -1,
+        ease: "none",
+      });
+
       gsap.fromTo(
-        ".hero-photo",
-        { scale: 1.1, yPercent: -3 },
+        ".product-engine",
+        { scale: 0.86, rotate: 5 },
         {
-          scale: 1,
-          yPercent: 3,
+          scale: 1.03,
+          rotate: -4,
           ease: "none",
-          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.4 },
-        }
+          scrollTrigger: {
+            trigger: ".features-layout",
+            start: "top 85%",
+            end: "bottom 40%",
+            scrub: 0.7,
+          },
+        },
       );
 
-      /* hero waves draw */
-      $<SVGPathElement>(".hero-waves path").forEach((p, i) => {
-        const len = p.getTotalLength();
-        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
-        gsap.to(p, { strokeDashoffset: 0, duration: 2.4, delay: 0.6 + i * 0.25, ease: "power2.inOut" });
-        if (!prefersReduced) {
-          gsap.to(p, { y: i % 2 ? 8 : -8, duration: 3 + i, yoyo: true, repeat: -1, ease: "sine.inOut" });
-        }
-      });
-
-      /* ---------- marquee (seamless infinite loop, velocity reactive) ---------- */
-      const marqueeEl = root.querySelector<HTMLElement>(".marquee");
-      const track = root.querySelector<HTMLElement>(".marquee-track");
-      let marqueeTick: ((time: number, delta: number) => void) | null = null;
-      let marqueeDisposed = false;
-      const setupMarquee = contextSafe(() => {
-        if (marqueeDisposed || !marqueeEl || !track) return;
-        const base = track.querySelector<HTMLElement>(".marquee-chunk");
-        if (!base) return;
-        /* collapse back to one chunk, then clone enough copies so the row
-           always spans at least 2× the viewport — guarantees no empty gap
-           after a chunk scrolls off, at any screen width */
-        while (track.children.length > 1) track.removeChild(track.lastChild as ChildNode);
-        const chunkW = base.offsetWidth;
-        if (!chunkW) return;
-        const copies = Math.max(2, Math.ceil((marqueeEl.clientWidth * 2) / chunkW) + 1);
-        for (let i = 1; i < copies; i += 1) track.appendChild(base.cloneNode(true));
-
-        let x = 0;
-        const speed = prefersReduced ? 0 : 55; /* px per second */
-        let velo = 0;
-        ScrollTrigger.create({
-          trigger: document.body,
-          start: 0,
-          end: "max",
-          onUpdate: (self) => {
-            velo = self.getVelocity() / 130;
-          },
-        });
-        marqueeTick = (_t, delta) => {
-          const boost = gsap.utils.clamp(-700, 700, velo);
-          velo *= 0.9;
-          x -= (speed + Math.abs(boost)) * (delta / 1000);
-          /* wrap by exactly one chunk width → the next copy lands seamlessly */
-          if (x <= -chunkW) x = x % chunkW;
-          gsap.set(track, { x });
-        };
-        gsap.ticker.add(marqueeTick);
-      });
-      /* measure after fonts load so the Arabic chunk width is correct */
-      if (typeof document !== "undefined" && document.fonts && document.fonts.status !== "loaded") {
-        document.fonts.ready.then(setupMarquee);
-      } else {
-        setupMarquee();
-      }
-
-      /* ---------- engine chapter: pinned scrub ---------- */
-      const stage = root.querySelector(".engine-stage");
-      if (stage) {
-        const rpmValue = root.querySelector(".rpm-value");
-        const rpmNeedle = root.querySelector(".rpm-needle");
-        const rpmArc = root.querySelector<SVGPathElement>(".rpm-arc-fill");
-        const arcLen = rpmArc ? rpmArc.getTotalLength() : 0;
-        if (rpmArc) gsap.set(rpmArc, { strokeDasharray: arcLen, strokeDashoffset: arcLen });
-
-        const rpmState = { v: 650 };
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".engine-chapter",
-            start: "top top",
-            end: "+=320%",
-            pin: ".engine-stage",
-            scrub: 0.6,
-            anticipatePin: 1,
-          },
-        });
-
-        tl.fromTo(".engine-ghost60", { scale: 1.25, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2 }, 0)
-          .fromTo(".engine-center", { scale: 0.78, y: 80 }, { scale: 1, y: 0, duration: 1.2 }, 0)
-          .fromTo(".engine-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8 }, 0.15)
-          .to(".engine-orbit", { rotation: 200, duration: 5.8, ease: "none" }, 0);
-
-        $(".callout").forEach((co, i) => {
-          const at = 1.1 + i * 0.95;
-          tl.fromTo(co, { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: 0.55 }, at).fromTo(
-            co.querySelector(".c-line"),
-            { scaleX: 0 },
-            { scaleX: 1, duration: 0.5 },
-            at + 0.1
-          );
-          const num = co.querySelector("[data-count]");
-          if (num) {
-            const target = parseFloat(num.getAttribute("data-count") ?? "0");
-            const dec = parseInt(num.getAttribute("data-decimals") ?? "0", 10);
-            const st = { v: 0 };
-            tl.to(
-              st,
-              {
-                v: target,
-                duration: 0.8,
-                ease: "power1.out",
-                onUpdate: () => {
-                  num.textContent = st.v.toFixed(dec);
-                },
-              },
-              at
-            );
-          }
-        });
-
-        /* rpm sweep across the whole pin */
-        tl.to(
-          rpmState,
-          {
-            v: 6000,
-            duration: 5.2,
-            ease: "power1.inOut",
-            onUpdate: () => {
-              if (rpmValue) rpmValue.textContent = String(Math.round(rpmState.v / 10) * 10);
-              const p = (rpmState.v - 650) / (6000 - 650);
-              if (rpmNeedle) gsap.set(rpmNeedle, { rotation: -90 + p * 180, svgOrigin: "60 62" });
-              if (rpmArc) gsap.set(rpmArc, { strokeDashoffset: arcLen * (1 - p) });
-            },
-          },
-          0.6
-        );
-
-        tl.fromTo(".rpm-dial", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 0.5);
-        tl.to({}, { duration: 0.6 }); /* settle beat at the end */
-
-        /* 360° spin scrubbed across the whole pinned chapter — alpha WebP
-           frames drawn to canvas (true transparency on every device) */
-        const spinCanvas = root.querySelector<HTMLCanvasElement>(".engine-spin-canvas");
-        if (spinCanvas) {
-          const SPIN_FRAMES = 46;
-          /* lighter frame set on small screens */
-          const spinDir = window.matchMedia("(max-width: 640px)").matches
-            ? "/images/spin/sm"
-            : "/images/spin";
-          const ctx = spinCanvas.getContext("2d");
-          const frames: HTMLImageElement[] = [];
-          let drawn = -1;
-          const draw = (i: number) => {
-            const img = frames[i];
-            if (!ctx || !img?.complete || !img.naturalWidth) return;
-            if (spinCanvas.width !== img.naturalWidth) {
-              spinCanvas.width = img.naturalWidth;
-              spinCanvas.height = img.naturalHeight;
-            }
-            ctx.clearRect(0, 0, spinCanvas.width, spinCanvas.height);
-            ctx.drawImage(img, 0, 0);
-            drawn = i;
-          };
-          /* defer the ~1MB sequence until the browser is idle so it never
-             competes with hero paint / first scroll */
-          const loadFrames = () => {
-            for (let i = 0; i < SPIN_FRAMES; i += 1) {
-              const img = new Image();
-              img.src = `${spinDir}/frame-${String(i).padStart(3, "0")}.webp`;
-              if (i === 0) img.onload = () => draw(0);
-              frames.push(img);
-            }
-          };
-          if ("requestIdleCallback" in window) {
-            window.requestIdleCallback(loadFrames, { timeout: 1200 });
-          } else {
-            setTimeout(loadFrames, 350);
-          }
-          const spinState = { f: 0 };
-          tl.to(
-            spinState,
-            {
-              f: SPIN_FRAMES - 1,
-              duration: tl.duration(),
-              ease: "none",
-              onUpdate: () => {
-                const i = Math.round(spinState.f);
-                if (i !== drawn) draw(i);
-              },
-            },
-            0
-          );
-        }
-      }
-
-      /* ---------- generic section reveals ---------- */
-      $("[data-reveal]").forEach((el) => {
-        gsap.from(el, {
+      root.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
+        gsap.from(element, {
           opacity: 0,
-          y: 46,
-          duration: 1,
+          y: 54,
+          duration: 0.9,
           ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 84%" },
+          scrollTrigger: { trigger: element, start: "top 86%" },
         });
       });
-      $("[data-reveal-group]").forEach((group) => {
+
+      root.querySelectorAll<HTMLElement>("[data-stagger]").forEach((group) => {
         gsap.from(group.children, {
           opacity: 0,
-          y: 50,
-          duration: 0.9,
-          stagger: 0.12,
+          y: 48,
+          duration: 0.8,
+          stagger: 0.11,
           ease: "power3.out",
-          scrollTrigger: { trigger: group, start: "top 82%" },
-        });
-      });
-      $("h2[data-words]").forEach((h) => {
-        splitWords(h);
-        const targets = h.querySelectorAll(".w > span");
-        gsap.set(targets, { yPercent: 145 });
-        gsap.to(targets, {
-          yPercent: 0,
-          duration: 0.85,
-          stagger: 0.05,
-          ease: "power3.out",
-          scrollTrigger: { trigger: h, start: "top 85%" },
+          scrollTrigger: { trigger: group, start: "top 83%" },
         });
       });
 
-      /* heritage 1922 counter */
-      const heritageYear = root.querySelector(".heritage-year b span");
-      if (heritageYear) {
-        ScrollTrigger.create({
-          trigger: ".heritage",
-          start: "top 80%",
-          once: true,
-          onEnter: () => {
-            if (prefersReduced) heritageYear.textContent = "1922";
-            else counter(heritageYear, 1922, { from: 1850, duration: 2 });
-          },
-        });
-      }
-
-      /* video frame subtle scale-in */
-      gsap.fromTo(
-        ".video-frame",
-        { scale: 0.94 },
-        {
-          scale: 1,
-          ease: "none",
-          scrollTrigger: { trigger: ".video-frame", start: "top 95%", end: "top 35%", scrub: 0.5 },
-        }
-      );
-
-      /* fisher shots parallax — desktop only (avoids transform thrash on mobile) */
-      const mm = gsap.matchMedia();
-      mm.add("(min-width: 768px)", () => {
-        $(".fisher-shot").forEach((el, i) => {
-          gsap.to(el, {
-            y: i % 2 ? -34 : 34,
-            ease: "none",
-            scrollTrigger: { trigger: ".fishers-grid", start: "top bottom", end: "bottom top", scrub: 0.6 },
-          });
-        });
+      gsap.to(".proof-photo", {
+        scale: 1.08,
+        yPercent: 4,
+        ease: "none",
+        scrollTrigger: { trigger: ".proof", start: "top bottom", end: "bottom top", scrub: 0.6 },
       });
 
-      /* specs rows cascade */
-      gsap.from(".spec-row", {
-        opacity: 0,
-        x: 40,
-        duration: 0.7,
-        stagger: 0.06,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".specs-table", start: "top 80%" },
-      });
-
-      /* ---------- anchor links via lenis ---------- */
-      const onAnchorClick = (e: Event) => {
-        const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
-        if (!a) return;
-        const target = document.querySelector<HTMLElement>(a.getAttribute("href") ?? "");
+      const handleAnchorClick = (event: MouseEvent) => {
+        const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+        if (!link) return;
+        const target = root.querySelector<HTMLElement>(link.getAttribute("href") ?? "");
         if (!target) return;
-        e.preventDefault();
-        if (lenis) lenis.scrollTo(target, { offset: -70 });
-        else
-          window.scrollTo({
-            top: target.getBoundingClientRect().top + window.scrollY - 70,
-            behavior: "smooth",
-          });
+        event.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
       };
-      root.addEventListener("click", onAnchorClick);
 
-      return () => {
-        marqueeDisposed = true;
-        root.removeEventListener("click", onAnchorClick);
-        if (marqueeTick) gsap.ticker.remove(marqueeTick);
-        if (lenisRaf) gsap.ticker.remove(lenisRaf);
-        lenis?.destroy();
-      };
+      root.addEventListener("click", handleAnchorClick);
+      return () => root.removeEventListener("click", handleAnchorClick);
     },
-    { scope: rootRef }
+    { scope: rootRef },
   );
 
   return (
-    <div ref={rootRef}>
-      <div className="grain" />
-      <Nav />
-      <DepthMeter />
-      <Hero />
-      <Marquee />
-      <EngineChapter />
-      <WhySection />
-      <VideoSection />
-      <FishersSection />
-      <SpecsSection />
-      <ContactSection />
-      <Footer />
-      <WhatsAppFab />
+    <div className="landing" ref={rootRef}>
+      <div className="noise" aria-hidden="true" />
+      <div className="scroll-progress" aria-hidden="true"><span /></div>
+
+      <nav className="site-nav" aria-label="التنقل الرئيسي">
+        <div className="nav-shell">
+          <Brand />
+          <div className="nav-links">
+            <a href="#features">المزايا</a>
+            <a href="#business">لأعمال الرحلات</a>
+            <a href="#specs">المواصفات</a>
+          </div>
+          <WhatsAppLink
+            className="nav-whatsapp"
+            message="السلام عليكم، أرغب في معرفة سعر وتوفّر محرك توهاتسو MFS150A."
+          >
+            اطلب السعر
+          </WhatsAppLink>
+        </div>
+      </nav>
+
+      <main>
+        <header className="hero" id="top">
+          <Image
+            className="hero-scene"
+            src="/images/mfs150-tour-hero.png"
+            alt="قارب رحلات بحرية بمحرك توهاتسو MFS150A أبيض أثناء الإبحار"
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+          />
+          <div className="hero-overlay" aria-hidden="true" />
+          <div className="hero-light" aria-hidden="true" />
+          <div className="hero-gridlines" aria-hidden="true" />
+
+          <div className="hero-shell">
+            <div className="hero-copy">
+              <div className="hero-kicker">
+                <span className="signal-dot" />
+                <span>الجديد كليًا لعام 2026</span>
+                <b dir="ltr">MFS150A</b>
+              </div>
+              <h1 className="hero-title">
+                <span>قوة تدفع</span>
+                <span className="outline">رحلتك للأمام</span>
+              </h1>
+              <p className="hero-lead">
+                توهاتسو 150 حصان الجديد — عزم قوي، وزن هو الأخف في فئته،
+                وهدوء يرفع جودة التجربة. صُمّم لقوارب الرحلات، التأجير، والنزهات
+                الطويلة التي لا تحتمل التوقف.
+              </p>
+              <div className="hero-actions">
+                <WhatsAppLink message="السلام عليكم، أدير رحلات بحرية أو قارب تأجير وأرغب بعرض سعر لمحرك توهاتسو MFS150A مع تفاصيل التركيب.">
+                  اطلب عرضًا لمشروعك
+                </WhatsAppLink>
+                <a className="cta cta-secondary" href="#features">
+                  اكتشف المحرك
+                  <span aria-hidden="true">↓</span>
+                </a>
+              </div>
+              <div className="hero-metrics" aria-label="أهم الأرقام">
+                <div className="metric">
+                  <strong><span data-count="150">0</span><small>HP</small></strong>
+                  <span>قوة كاملة</span>
+                </div>
+                <div className="metric">
+                  <strong><span data-count="178.5" data-decimals="1">0</span><small>KG</small></strong>
+                  <span>الوزن الأدنى</span>
+                </div>
+                <div className="metric">
+                  <strong><span data-count="41">0</span><small>A</small></strong>
+                  <span>قدرة الشحن</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="hero-model" aria-hidden="true">
+            <span>TOHATSU</span>
+            <b>150</b>
+            <small>SIMPLIQ™ TECHNOLOGY</small>
+          </div>
+          <div className="hero-scroll" aria-hidden="true">
+            <span>مرّر للاستكشاف</span>
+            <i />
+          </div>
+        </header>
+
+        <div className="marquee" aria-hidden="true">
+          <div className="marquee-track">
+            <div className="marquee-content">
+              <span>الأخف في فئته</span><i />
+              <span dir="ltr">150 HP</span><i />
+              <span>عادم مضبوط 4–2–1</span><i />
+              <span>حقن إلكتروني EFI</span><i />
+              <span>مولّد 41 أمبير</span><i />
+              <span>هندسة يابانية منذ 1922</span><i />
+            </div>
+            <div className="marquee-content">
+              <span>الأخف في فئته</span><i />
+              <span dir="ltr">150 HP</span><i />
+              <span>عادم مضبوط 4–2–1</span><i />
+              <span>حقن إلكتروني EFI</span><i />
+              <span>مولّد 41 أمبير</span><i />
+              <span>هندسة يابانية منذ 1922</span><i />
+            </div>
+          </div>
+        </div>
+
+        <section className="features section-dark" id="features">
+          <div className="section-shell">
+            <div className="section-heading" data-reveal>
+              <div>
+                <span className="eyebrow">قوة مدروسة للتشغيل الحقيقي</span>
+                <h2>كل حصان يعمل<br /><em>لصالح رحلتك.</em></h2>
+              </div>
+              <p>
+                ليس الرقم وحده ما يصنع محركًا ناجحًا. MFS150A يجمع قوة 150 حصان
+                مع وزن منخفض، عزم مبكر، واقتصاد ينعكس على كل ميل بحري.
+              </p>
+            </div>
+
+            <div className="features-layout">
+              <div className="product-sticky">
+                <div className="product-glow" aria-hidden="true" />
+                <div className="product-orbit" aria-hidden="true"><i /></div>
+                <span className="product-ghost" aria-hidden="true">150</span>
+                <Image
+                  className="product-engine"
+                  src="/images/mfs150-official.png"
+                  alt="محركا توهاتسو MFS150A باللونين الأبيض والأزرق أكوامارين"
+                  width={544}
+                  height={664}
+                  sizes="(max-width: 900px) 82vw, 44vw"
+                />
+                <div className="product-badge">
+                  <b>الأخف</b>
+                  <span>ضمن فئة 150 حصان رباعية الأشواط</span>
+                </div>
+              </div>
+
+              <div className="feature-list">
+                {FEATURES.map((feature) => (
+                  <article className="feature-card" data-reveal key={feature.number}>
+                    <div className="feature-topline">
+                      <span>{feature.number}</span>
+                      <b dir="ltr">{feature.label}</b>
+                    </div>
+                    <h3>{feature.title}</h3>
+                    <p>{feature.text}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="business section-light" id="business">
+          <div className="section-shell">
+            <div className="business-intro" data-reveal>
+              <span className="eyebrow">عندما يكون القارب جزءًا من عملك</span>
+              <h2>المحرك لا ينقل الضيوف فقط.<br /><em>إنه يحمي سمعة الرحلة.</em></h2>
+              <p>
+                التأخير، الضوضاء، والاستهلاك الزائد تُرى في تقييم العميل وفي
+                هامش الربح. لذلك صُمم MFS150A ليخدم الاستخدام الترفيهي والتجاري
+                بقوة سلسة وسهولة تشغيل يومية.
+              </p>
+            </div>
+
+            <div className="use-case-grid" data-stagger>
+              {USE_CASES.map((useCase) => (
+                <article className="use-case" key={useCase.number}>
+                  <span className="use-number">{useCase.number}</span>
+                  <h3>{useCase.title}</h3>
+                  <p>{useCase.text}</p>
+                  <b>{useCase.metric}</b>
+                </article>
+              ))}
+            </div>
+
+            <div className="operator-panel" data-reveal>
+              <div>
+                <span>قرار شراء مبني على قاربك</span>
+                <h3>أرسل لنا نوع القارب وطوله وطبيعة الاستخدام.</h3>
+              </div>
+              <WhatsAppLink message="السلام عليكم، أريد التأكد من ملاءمة محرك توهاتسو MFS150A لقاربي. سأرسل نوع القارب وطوله وطبيعة الاستخدام.">
+                استشرنا عبر واتساب
+              </WhatsAppLink>
+            </div>
+          </div>
+        </section>
+
+        <section className="proof">
+          <Image
+            className="proof-photo"
+            src="/images/mfs150-white.jpg"
+            alt="محرك توهاتسو MFS150A أبيض مركب على قارب"
+            fill
+            sizes="100vw"
+          />
+          <div className="proof-overlay" aria-hidden="true" />
+          <div className="proof-copy" data-reveal>
+            <span className="eyebrow">هدوء يشعر به الجميع</span>
+            <blockquote>
+              دع صوت البحر يتقدّم،<br />واترك المحرك يعمل في الخلفية.
+            </blockquote>
+            <p>
+              سحب متساوي الطول، منفذ خمول واسع، وبرمجة دقيقة لوحدة ECU تمنحك
+              صوتًا محسوبًا عند الانطلاق وهدوءًا أفضل قرب المرسى.
+            </p>
+          </div>
+        </section>
+
+        <section className="specs section-dark" id="specs">
+          <div className="section-shell specs-layout">
+            <div className="specs-copy" data-reveal>
+              <span className="eyebrow">المواصفات الرسمية</span>
+              <h2 dir="ltr">MFS150A</h2>
+              <p>
+                منظومة رباعية الأشواط بهندسة SOHC-4V، متوفرة بخيارات تحكم عن
+                بعد أو مقبض متعدد الوظائف، ومع خيار دوران عكسي للتركيب المزدوج.
+              </p>
+              <div className="specs-chips">
+                <span>EFI</span>
+                <span>Power Trim & Tilt</span>
+                <span>Fresh-water Flush</span>
+              </div>
+              <WhatsAppLink message="السلام عليكم، أرغب بعرض سعر وتفاصيل التوفّر والتركيب لمحرك توهاتسو MFS150A.">
+                اسأل عن السعر والتوفّر
+              </WhatsAppLink>
+            </div>
+
+            <dl className="specs-table" data-stagger>
+              {SPECS.map(([term, value]) => (
+                <div className="spec-row" key={term}>
+                  <dt>{term}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <div className="section-shell spec-note">
+            <p>
+              المواصفات بحسب توهاتسو الدولية وقد تختلف الخيارات المتاحة حسب السوق.
+              الوزن المذكور لأخف نسخة.
+            </p>
+            <a
+              href="https://www.tohatsu.com/marine/int/outboards/mfs150a.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              صفحة المنتج الرسمية ↗
+            </a>
+          </div>
+        </section>
+
+        <section className="closing section-light" id="contact">
+          <div className="section-shell closing-grid">
+            <div className="closing-mark" aria-hidden="true">150</div>
+            <div className="closing-copy" data-reveal>
+              <span className="eyebrow">الخطوة التالية بسيطة</span>
+              <h2>رحلتك القادمة<br /><em>تبدأ من المحرك.</em></h2>
+              <p>
+                اكتب لنا على واتساب. سنسألك عن القارب، الاستخدام، وعدد ساعات
+                التشغيل لنساعدك في اختيار التجهيز المناسب لـ MFS150A.
+              </p>
+              <WhatsAppLink message="السلام عليكم، أرغب في عرض سعر لمحرك توهاتسو MFS150A. استخدام القارب: رحلات بحرية / تأجير / شخصي، وأرغب بمعرفة التجهيز المناسب.">
+                ابدأ المحادثة الآن
+              </WhatsAppLink>
+              <span className="closing-hint">بدون نماذج — تواصل مباشر مع الفريق</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="footer">
+        <div className="section-shell footer-inner">
+          <Brand />
+          <p>توهاتسو أرابيا — قوة يابانية لأهل البحر منذ 1922.</p>
+          <span dir="ltr">MFS150A © 2026</span>
+        </div>
+      </footer>
+
+      <a
+        className="whatsapp-fab"
+        href={waLink("السلام عليكم، أرغب في معرفة سعر وتوفّر محرك توهاتسو MFS150A.")}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="تواصل عبر واتساب عن محرك توهاتسو MFS150A"
+      >
+        <WhatsAppIcon />
+        <span>واتساب</span>
+      </a>
     </div>
   );
 }

@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export function Brand() {
   return (
-    <a className="brand" href="#hero" aria-label="توهاتسو أرابيا — الصفحة الرئيسية">
+    <a className="brand" href="#top" aria-label="توهاتسو أرابيا — الصفحة الرئيسية">
       <Image
         className="brand-logo"
         src="/images/logo.webp"
