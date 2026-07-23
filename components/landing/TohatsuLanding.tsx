@@ -292,7 +292,7 @@ export default function TohatsuLanding() {
               </div>
               <h1 className="hero-title">
                 <span>قوة تدفع</span>
-                <span className="outline">رحلتك للأمام</span>
+                <span className="shine">رحلتك للأمام</span>
               </h1>
               <p className="hero-lead">
                 توهاتسو 150 حصان الجديد — عزم قوي، وزن هو الأخف في فئته،
@@ -372,17 +372,29 @@ export default function TohatsuLanding() {
 
             <div className="features-layout">
               <div className="product-sticky">
+                <div className="stage-spotlight" aria-hidden="true" />
+                <div className="stage-grid" aria-hidden="true" />
                 <div className="product-glow" aria-hidden="true" />
-                <div className="product-orbit" aria-hidden="true"><i /></div>
+                <div className="product-orbit" aria-hidden="true" />
+                <div className="stage-ring" aria-hidden="true" />
                 <span className="product-ghost" aria-hidden="true">150</span>
+                <div className="stage-floor" aria-hidden="true" />
                 <Image
                   className="product-engine"
-                  src="/images/mfs150-official.png"
+                  src="/images/mfs150-official-cut.png"
                   alt="محركا توهاتسو MFS150A باللونين الأبيض والأزرق أكوامارين"
                   width={544}
                   height={664}
                   sizes="(max-width: 900px) 82vw, 44vw"
                 />
+                <div className="product-chip chip-power" aria-hidden="true" dir="ltr">
+                  <b>150</b>
+                  <span>HP</span>
+                </div>
+                <div className="product-chip chip-tech" aria-hidden="true" dir="ltr">
+                  <b>EFI</b>
+                  <span>DOHC 16V</span>
+                </div>
                 <div className="product-badge">
                   <b>الأخف</b>
                   <span>ضمن فئة 150 حصان رباعية الأشواط</span>
