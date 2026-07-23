@@ -97,7 +97,7 @@ button:focus-visible {
   display: block;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, var(--red), var(--blue));
+  background: var(--red);
   transform: scaleX(0);
   transform-origin: right center;
   will-change: transform;
@@ -124,7 +124,7 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  color: var(--blue);
+  color: var(--red);
   font-family: var(--display);
   font-size: 12px;
   font-weight: 700;
@@ -167,10 +167,7 @@ button:focus-visible {
 .business-intro h2 em,
 .closing-copy h2 em {
   font-style: normal;
-  background: linear-gradient(115deg, var(--red) 25%, #ff8a5e 95%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--red);
 }
 
 .section-heading > p,
@@ -240,7 +237,7 @@ button:focus-visible {
   position: absolute;
   inset: auto 0 23px;
   height: 1px;
-  background: var(--blue);
+  background: var(--red);
   transform: scaleX(0);
   transition: transform 0.25s ease;
 }
@@ -302,9 +299,9 @@ button:focus-visible {
 }
 
 .cta-whatsapp {
-  background: linear-gradient(140deg, #27c368, #149a4d 80%);
+  background: var(--whatsapp);
   color: #fff;
-  box-shadow: 0 16px 36px rgba(29, 173, 91, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: 0 16px 36px rgba(29, 173, 91, 0.28);
 }
 
 .cta-whatsapp::after {
@@ -325,8 +322,8 @@ button:focus-visible {
 }
 
 .cta-whatsapp:hover {
-  background: linear-gradient(140deg, #2ecf72, #17a854 80%);
-  box-shadow: 0 22px 46px rgba(29, 173, 91, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: #178c4a;
+  box-shadow: 0 22px 46px rgba(29, 173, 91, 0.38);
 }
 
 .cta-arrow {
@@ -436,7 +433,7 @@ button:focus-visible {
 }
 
 .hero-kicker b {
-  color: var(--blue);
+  color: var(--red);
   font-weight: 700;
 }
 
@@ -462,11 +459,7 @@ button:focus-visible {
 }
 
 .hero-title .shine {
-  background: linear-gradient(100deg, #eef5ff 0%, #b7cff4 38%, var(--blue) 74%, #3a70cc 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 6px 30px rgba(47, 98, 189, 0.28));
+  color: var(--red);
 }
 
 .hero-lead {
@@ -517,7 +510,7 @@ button:focus-visible {
 
 .metric strong small {
   margin-left: 5px;
-  color: var(--blue);
+  color: var(--red);
   font-size: 0.36em;
   letter-spacing: 0.04em;
 }
@@ -551,13 +544,10 @@ button:focus-visible {
 .hero-model b {
   grid-column: 2;
   grid-row: 1 / 3;
+  color: rgba(243, 247, 248, 0.5);
   font-size: clamp(82px, 9vw, 150px);
   font-weight: 800;
   line-height: 0.72;
-  background: linear-gradient(180deg, rgba(243, 247, 248, 0.72), rgba(243, 247, 248, 0.05));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .hero-model small {
@@ -609,7 +599,7 @@ button:focus-visible {
   z-index: 2;
   overflow: hidden;
   border-block: 1px solid var(--line);
-  background: linear-gradient(90deg, var(--red-dark), var(--red) 24%, var(--red) 76%, var(--red-dark));
+  background: var(--red);
   color: white;
   direction: ltr;
 }
@@ -694,13 +684,8 @@ button:focus-visible {
   position: absolute;
   inset: 0;
   z-index: 6;
+  border: 1px solid rgba(122, 165, 232, 0.18);
   border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(200deg, rgba(122, 165, 232, 0.45), rgba(122, 165, 232, 0.06) 34%, transparent 55%, rgba(238, 73, 61, 0.2) 90%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
   pointer-events: none;
 }
 
@@ -744,10 +729,9 @@ button:focus-visible {
   z-index: -1;
   width: 80%;
   aspect-ratio: 1;
+  border: 1px solid rgba(122, 165, 232, 0.08);
+  border-top-color: rgba(122, 165, 232, 0.55);
   border-radius: 999px;
-  background: conic-gradient(from 40deg, transparent 0 68%, rgba(122, 165, 232, 0.6) 86%, transparent 97%);
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
   will-change: transform;
 }
 
@@ -771,14 +755,11 @@ button:focus-visible {
 .product-ghost {
   position: absolute;
   z-index: -2;
+  color: rgba(243, 247, 248, 0.05);
   font-family: var(--display);
   font-size: clamp(210px, 25vw, 390px);
   font-weight: 800;
   line-height: 1;
-  background: linear-gradient(180deg, rgba(243, 247, 248, 0.1), rgba(243, 247, 248, 0.01) 80%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
   transform: translateY(-6%);
 }
 
@@ -828,7 +809,7 @@ button:focus-visible {
 }
 
 .product-chip span {
-  color: var(--blue);
+  color: var(--red);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -866,7 +847,7 @@ button:focus-visible {
 }
 
 .product-badge b {
-  color: var(--blue);
+  color: var(--ice);
   font-family: var(--display);
   font-size: 14px;
 }
@@ -900,7 +881,7 @@ button:focus-visible {
   top: 50%;
   width: 2px;
   height: 0;
-  background: linear-gradient(180deg, var(--blue), rgba(122, 165, 232, 0));
+  background: var(--red);
   transform: translateY(-50%);
   transition: height 0.45s ease;
 }
@@ -910,7 +891,7 @@ button:focus-visible {
 }
 
 .feature-card:hover {
-  background: linear-gradient(270deg, rgba(122, 165, 232, 0.045), transparent 65%);
+  background: rgba(122, 165, 232, 0.05);
 }
 
 .feature-card:last-child {
@@ -934,7 +915,7 @@ button:focus-visible {
   border: 1px solid rgba(238, 73, 61, 0.4);
   border-radius: 999px;
   background: rgba(238, 73, 61, 0.09);
-  color: #ff9c8b;
+  color: var(--red);
   font-family: var(--display);
   font-size: 11px;
   font-weight: 700;
@@ -942,7 +923,7 @@ button:focus-visible {
 }
 
 .feature-topline b {
-  color: var(--blue);
+  color: var(--ice);
   font-family: var(--display);
   font-size: clamp(18px, 2vw, 28px);
   font-weight: 700;
@@ -1026,7 +1007,7 @@ button:focus-visible {
   position: absolute;
   inset: 0 0 auto;
   height: 3px;
-  background: linear-gradient(90deg, var(--blue-strong), var(--blue));
+  background: var(--brand);
   transform: scaleX(0);
   transform-origin: 100% 50%;
   transition: transform 0.45s ease;
@@ -1044,14 +1025,11 @@ button:focus-visible {
 }
 
 .use-number {
+  color: rgba(6, 21, 34, 0.16);
   font-family: var(--display);
   font-size: clamp(42px, 4vw, 58px);
   font-weight: 800;
   line-height: 1;
-  background: linear-gradient(180deg, rgba(6, 21, 34, 0.28), rgba(6, 21, 34, 0.04));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .use-case h3 {
@@ -1099,13 +1077,8 @@ button:focus-visible {
   content: "";
   position: absolute;
   inset: 0;
+  border: 1px solid rgba(122, 165, 232, 0.2);
   border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(160deg, rgba(122, 165, 232, 0.4), transparent 45%, rgba(238, 73, 61, 0.18));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
   pointer-events: none;
 }
 
@@ -1220,15 +1193,12 @@ button:focus-visible {
 
 .specs-copy h2 {
   margin-top: 20px;
+  color: var(--ice);
   font-family: var(--display);
   font-size: clamp(54px, 6.5vw, 96px);
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.04em;
-  background: linear-gradient(160deg, #ffffff 5%, #c3d3ea 48%, var(--blue) 120%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .specs-copy > p {
@@ -1246,10 +1216,10 @@ button:focus-visible {
 
 .specs-chips span {
   padding: 9px 14px;
-  border: 1px solid rgba(122, 165, 232, 0.25);
+  border: 1px solid rgba(243, 247, 248, 0.22);
   border-radius: 999px;
-  background: rgba(122, 165, 232, 0.07);
-  color: var(--blue);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ice);
   font-family: var(--display);
   font-size: 10px;
   font-weight: 600;
@@ -1301,7 +1271,7 @@ button:focus-visible {
 
 .spec-note a {
   flex: none;
-  color: var(--blue);
+  color: var(--red);
   transition: color 0.2s ease;
 }
 
@@ -1327,15 +1297,12 @@ button:focus-visible {
 }
 
 .closing-mark {
+  color: rgba(6, 21, 34, 0.08);
   font-family: var(--display);
   font-size: clamp(220px, 31vw, 500px);
   font-weight: 800;
   line-height: 0.76;
   letter-spacing: -0.06em;
-  background: linear-gradient(180deg, rgba(6, 21, 34, 0.16), rgba(6, 21, 34, 0.015));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
   transform: translateX(-10%);
 }
 
@@ -1403,7 +1370,7 @@ button:focus-visible {
   padding: 12px 17px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 999px;
-  background: linear-gradient(140deg, #27c368, #149a4d 80%);
+  background: var(--whatsapp);
   color: white;
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.3);
   font-family: var(--display);
@@ -1570,10 +1537,6 @@ button:focus-visible {
   .hero-title {
     font-size: clamp(45px, 13.5vw, 64px);
     line-height: 1.22;
-  }
-
-  .hero-title .shine {
-    filter: none;
   }
 
   .hero-lead {
